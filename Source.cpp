@@ -21,7 +21,7 @@ void UnsignedIntCorrectInput(unsigned int& container, std::string str, int lower
 	} while ((container > upper_bound) || (container != 0 && container != 1));
 }
 
-void if_field_isnt_initialized(bool* set_created_array, int index, TSet& set_op)
+void if_set_isnt_initialized(bool* set_created_array, int index, TSet& set_op)
 {
 	if (set_created_array[index] != 1)
 	{
@@ -53,7 +53,7 @@ int Interface()
 
 int main()
 {
-	TSet TSetArray[2];
+	TSet TSetArray[3];
 	bool set_initialized[2];
 
 	for (int i = 0; i < 2; i++)
@@ -78,134 +78,130 @@ int main()
 			std::cout << "\nDo you want to input set A or set B?\nA - 0\nB - 1\n";
 			std::cin >> which_set;
 
-			if_field_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
 			std::cout << "\nPlease input the bitfield: ";
 
-			InputRow(TSetArray[which_set]);
+			std::cin >> TSetArray[which_set];
 
 			break;
 
 		case 2:
 		{
-			int which_bitfield;
+			int which_set;
+			int remove_or_add_option;
 
-			std::cout << "\nDo you want to input bitfield A or bitfield B?\nA - 0\nB - 1\n";
-			std::cin >> which_bitfield;
+			std::cout << "\nDo you want to input set A or set B?\nA - 0\nB - 1\n";
+			std::cin >> which_set;
 
-			if_field_isnt_initialized(set_initialized, which_bitfield, TSetArray[which_bitfield]);
+			std::cout << "\nDo you want add or remove a number?\nRemove - 0\nAdd - 1\n";
+			std::cin >> remove_or_add_option;
+
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 			std::cin.clear();
 
-			unsigned int index = 0;
+			unsigned int number_set = 0;
 			unsigned int value = 0;
 
 			unsigned int zero_temp = 0;
 			unsigned int two_temp = 0;
-			UnsignedIntCorrectInput(index, "\nInput index: ", 0, (TSetArray[which_bitfield].reserved_ints * 32));
 
-			value = !TSetArray[which_bitfield].CheckState(index);
-
-			unsigned int temp_upper_bound_value = 2;
-			UnsignedIntCorrectInput(value, "\nInput value: ", -1, temp_upper_bound_value, 0);
-
-			if (value == 0)
+			if (remove_or_add_option == 1)
 			{
-				TSetArray[which_bitfield].TurnOff(index);
+				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size));
+
+				TSetArray[which_set].Include(number_set);
 			}
-			else if (value == 1)
+			else if (remove_or_add_option == 0)
 			{
-				TSetArray[which_bitfield].TurnOn(index);
+				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size));
+
+				TSetArray[which_set].Exclude(number_set);
 			}
 
-			if (TSetArray[which_bitfield].used_bits <= index)
-			{
-				TSetArray[which_bitfield].used_bits = index + 1;
-			}
-
-			OutputRow(TSetArray[which_bitfield]);
+			std::cout << TSetArray[which_set];
 
 			break;
 		}
 		case 3:
 		{
-			int which_bitfield;
+			int which_set;
 
-			std::cout << "\nDo you want to check a bit in bitfield A or bitfield B?\nA - 0\nB - 1\n\n";
-			std::cin >> which_bitfield;
+			std::cout << "\nDo you want to check a number in set A or set B?\nA - 0\nB - 1\n\n";
+			std::cin >> which_set;
 
-			if_field_isnt_initialized(set_initialized, which_bitfield, TSetArray[which_bitfield]);
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
 			unsigned int index = 0;
 
-			UnsignedIntCorrectInput(index, "\nInput index: ", 0, TSetArray[which_bitfield].reserved_ints * 32);
+			UnsignedIntCorrectInput(index, "\nInput index: ", 0, TSetArray[which_set].indicator_vector.reserved_ints * 32);
 
-			std::cout << "Bit with an index " << index << " equals to " << TSetArray[which_bitfield].CheckState(index) << std::endl;
+			if (TSetArray[which_set].CheckIfBelongs(which_set))
+			{
+				std::cout << "The number belongs to the set\n";
+			}
+			else
+			{
+				std::cout << "The number does not belong to the set\n";
+			}
 
-			OutputRow(TSetArray[which_bitfield]);
+			std::cout << TSetArray[which_set];
 
 			break;
 		}
 		case 4:
 
-			unsigned int inpt;
+			if_set_isnt_initialized(set_initialized, 0, TSetArray[0]);
+			if_set_isnt_initialized(set_initialized, 1, TSetArray[1]);
 
-			if_field_isnt_initialized(set_initialized, 0, TSetArray[0]);
-			if_field_isnt_initialized(set_initialized, 1, TSetArray[1]);
+			TSetArray[2] = (TSetArray[0] + TSetArray[1]);
 
-			if (TSetArray[0].reserved_ints > TSetArray[1].reserved_ints)
-			{
-				TSetArray[2].ChangeSize(TSetArray[0].reserved_ints);
-			}
-			else
-			{
-				TSetArray[2].ChangeSize(TSetArray[1].reserved_ints);
-			}
-
-			TSetArray[2] = (TSetArray[0] | TSetArray[1]);
-
-			OutputRow(TSetArray[2]);
+			std::cout << TSetArray[2];
 			break;
 
 		case 5:
 
-			if_field_isnt_initialized(set_initialized, 0, TSetArray[0]);
-			if_field_isnt_initialized(set_initialized, 1, TSetArray[1]);
+			std::cout << "\nDo you want to use set A or set B?\nA - 0\nB - 1\n";
+			std::cin >> which_set;
 
-			if (TSetArray[0].reserved_ints > TSetArray[1].reserved_ints)
-			{
-				TSetArray[2].ChangeSize(TSetArray[0].reserved_ints);
-			}
-			else
-			{
-				TSetArray[2].ChangeSize(TSetArray[1].reserved_ints);
-			}
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
-			TSetArray[2] = (TSetArray[0] & TSetArray[1]);
+			TSetArray[2] = ~TSetArray[which_set];
 
-			OutputRow(TSetArray[2]);
+			std::cout << TSetArray[2];
 			break;
 
 		case 6:
+
+			if_set_isnt_initialized(set_initialized, 0, TSetArray[0]);
+			if_set_isnt_initialized(set_initialized, 1, TSetArray[1]);
+
+			TSetArray[2] = (TSetArray[0] * TSetArray[1]);
+
+			std::cout << TSetArray[2];
+			break;
+
+		case 7:
 		{
 
-			int which_bitfield = 0;
+			int which_set = 0;
 
-			std::cout << "\nWhich bitfield do you want printed?\nA - 0\nB - 1\n";
+			std::cout << "\nWhich set do you want printed?\nA - 0\nB - 1\n";
 			std::cin.ignore();
-			std::cin >> which_bitfield;
+			std::cin >> which_set;
 
-			if (set_initialized[which_bitfield])
+			if (set_initialized[which_set])
 			{
-				OutputRow(TSetArray[which_bitfield]);
+				std::cout << TSetArray[which_set];
 			}
 			else
 			{
-				std::cout << "Please input the bitfield first\n";
+				std::cout << "Please input the set first\n";
 			}
 
 			break;
 		}
-		case 7:
+		case 8:
 
 			std::cout << "\n";
 			Interface();
