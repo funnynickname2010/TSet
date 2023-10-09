@@ -178,15 +178,25 @@ std::istream& operator>>(std::istream& is, TSet& st)
 	return is;
 }
 
-std::ostream& operator <<(std::ostream& os, const TSet& vec)
+std::ostream& operator <<(std::ostream& os, TSet& st)
 {
-	os << "{" << vec.val[0];
+	os << "{";
+	
+	bool something_before = 0;
 
-	for (int i = 1; i < vec.size; i++)
+	for (int i = 1; i < st.size; i++)
 	{
-		os << ", " << vec.val[i];
+		if (st.CheckIfBelongs(i) && something_before)
+		{
+			os << ", " << i;
+		}
+		else if (st.CheckIfBelongs(i))
+		{
+			os << i;
+			something_before = 1;
+		}
 	}
 
-	os << ")";
+	os << "}";
 	return os;
 }
