@@ -37,6 +37,13 @@ TSet::operator BitField()
 	return result;
 }
 
+const TSet& TSet::operator= (const TSet& obj2)
+{
+	indicator_vector = obj2.indicator_vector;
+	size = obj2.size;
+	return *this;
+}
+
 void TSet::Include(unsigned int index)
 {
 	indicator_vector.TurnOn(index);

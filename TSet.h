@@ -22,6 +22,7 @@ public:
 	void Exclude(unsigned int index);
 	bool CheckIfBelongs(unsigned int index);
 
+	const TSet& operator =(const TSet& obj2);
 	TSet operator +(TSet& obj2);
 	TSet operator ~();
 	TSet operator *(TSet& obj2);
