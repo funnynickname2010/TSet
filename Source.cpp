@@ -21,47 +21,48 @@ void UnsignedIntCorrectInput(unsigned int& container, std::string str, int lower
 	} while ((container > upper_bound) || (container != 0 && container != 1));
 }
 
-void if_field_isnt_initialized(bool* field_created_array, int index, BitField& bitfield_op)
+void if_field_isnt_initialized(bool* set_created_array, int index, TSet& set_op)
 {
-	if (field_created_array[index] != 1)
+	if (set_created_array[index] != 1)
 	{
 		unsigned int temp_size = 1;
 
 		std::wcout << "Input size of the bitfield in bits: ";
 		std::wcin >> temp_size;
 
-		bitfield_op.ChangeSize(temp_size);
-		field_created_array[index] = 1;
+		TSet temp_set(temp_size);
+		set_op = temp_set;
+		set_created_array[index] = 1;
 	}
 }
 
-void Interface()
+int Interface()
 {
-	std::cout << "1. Input a bitfitfield as a row\n";
-	std::cout << "2. Change a single bit of a bitfield\n";
-	std::cout << "3. Check state of a bit\n";
-	std::cout << "4. Test | operator\n";
-	std::cout << "5. Test & operator\n";
-	std::cout << "6. Print the bitfield\n";
-	std::cout << "7. Print menu\n";
-	std::cout << "8. Exit\n";
+	int i = 0;
+	std::cout << (i = (i + 1)) << ". Input set\n";
+	std::cout << (i = (i + 1)) << ". Add/Remove an element from a set\n";
+	std::cout << (i = (i + 1)) << ". Check if a number is in set\n";
+	std::cout << (i = (i + 1)) << ". Test + operator\n";
+	std::cout << (i = (i + 1)) << ". Test ~ operator\n";
+	std::cout << (i = (i + 1)) << ". Test * operator\n";
+	std::cout << (i = (i + 1)) << ". Print a set\n";
+	std::cout << (i = (i + 1)) << ". Print menu\n";
+	std::cout << (i = (i + 1)) << ". Exit\n";
+	return i;
 }
 
 int main()
 {
-	int option;
-	int exit_option = 8;
-
-	BitField BitFieldArray[3];
-
-	bool field_initialized[2];
+	TSet TSetArray[2];
+	bool set_initialized[2];
 
 	for (int i = 0; i < 2; i++)
 	{
-		field_initialized[i] = 0;
+		set_initialized[i] = 0;
 	}
 
-	Interface();
+	int option;
+	int exit_option = Interface();
 
 	do
 	{
@@ -70,18 +71,18 @@ int main()
 
 		switch (option)
 		{
-		case 1:
+		case 1: //Change
 
-			int which_bitfield;
+			int which_set;
 
-			std::cout << "\nDo you want to input bitfield A or bitfield B?\nA - 0\nB - 1\n";
-			std::cin >> which_bitfield;
+			std::cout << "\nDo you want to input set A or set B?\nA - 0\nB - 1\n";
+			std::cin >> which_set;
 
-			if_field_isnt_initialized(field_initialized, which_bitfield, BitFieldArray[which_bitfield]);
+			if_field_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
 			std::cout << "\nPlease input the bitfield: ";
 
-			InputRow(BitFieldArray[which_bitfield]);
+			InputRow(TSetArray[which_set]);
 
 			break;
 
@@ -92,7 +93,7 @@ int main()
 			std::cout << "\nDo you want to input bitfield A or bitfield B?\nA - 0\nB - 1\n";
 			std::cin >> which_bitfield;
 
-			if_field_isnt_initialized(field_initialized, which_bitfield, BitFieldArray[which_bitfield]);
+			if_field_isnt_initialized(set_initialized, which_bitfield, TSetArray[which_bitfield]);
 			std::cin.clear();
 
 			unsigned int index = 0;
@@ -100,28 +101,28 @@ int main()
 
 			unsigned int zero_temp = 0;
 			unsigned int two_temp = 0;
-			UnsignedIntCorrectInput(index, "\nInput index: ", 0, (BitFieldArray[which_bitfield].reserved_ints * 32));
+			UnsignedIntCorrectInput(index, "\nInput index: ", 0, (TSetArray[which_bitfield].reserved_ints * 32));
 
-			value = !BitFieldArray[which_bitfield].CheckState(index);
+			value = !TSetArray[which_bitfield].CheckState(index);
 
 			unsigned int temp_upper_bound_value = 2;
 			UnsignedIntCorrectInput(value, "\nInput value: ", -1, temp_upper_bound_value, 0);
 
 			if (value == 0)
 			{
-				BitFieldArray[which_bitfield].TurnOff(index);
+				TSetArray[which_bitfield].TurnOff(index);
 			}
 			else if (value == 1)
 			{
-				BitFieldArray[which_bitfield].TurnOn(index);
+				TSetArray[which_bitfield].TurnOn(index);
 			}
 
-			if (BitFieldArray[which_bitfield].used_bits <= index)
+			if (TSetArray[which_bitfield].used_bits <= index)
 			{
-				BitFieldArray[which_bitfield].used_bits = index + 1;
+				TSetArray[which_bitfield].used_bits = index + 1;
 			}
 
-			OutputRow(BitFieldArray[which_bitfield]);
+			OutputRow(TSetArray[which_bitfield]);
 
 			break;
 		}
@@ -132,15 +133,15 @@ int main()
 			std::cout << "\nDo you want to check a bit in bitfield A or bitfield B?\nA - 0\nB - 1\n\n";
 			std::cin >> which_bitfield;
 
-			if_field_isnt_initialized(field_initialized, which_bitfield, BitFieldArray[which_bitfield]);
+			if_field_isnt_initialized(set_initialized, which_bitfield, TSetArray[which_bitfield]);
 
 			unsigned int index = 0;
 
-			UnsignedIntCorrectInput(index, "\nInput index: ", 0, BitFieldArray[which_bitfield].reserved_ints * 32);
+			UnsignedIntCorrectInput(index, "\nInput index: ", 0, TSetArray[which_bitfield].reserved_ints * 32);
 
-			std::cout << "Bit with an index " << index << " equals to " << BitFieldArray[which_bitfield].CheckState(index) << std::endl;
+			std::cout << "Bit with an index " << index << " equals to " << TSetArray[which_bitfield].CheckState(index) << std::endl;
 
-			OutputRow(BitFieldArray[which_bitfield]);
+			OutputRow(TSetArray[which_bitfield]);
 
 			break;
 		}
@@ -148,40 +149,40 @@ int main()
 
 			unsigned int inpt;
 
-			if_field_isnt_initialized(field_initialized, 0, BitFieldArray[0]);
-			if_field_isnt_initialized(field_initialized, 1, BitFieldArray[1]);
+			if_field_isnt_initialized(set_initialized, 0, TSetArray[0]);
+			if_field_isnt_initialized(set_initialized, 1, TSetArray[1]);
 
-			if (BitFieldArray[0].reserved_ints > BitFieldArray[1].reserved_ints)
+			if (TSetArray[0].reserved_ints > TSetArray[1].reserved_ints)
 			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[0].reserved_ints);
+				TSetArray[2].ChangeSize(TSetArray[0].reserved_ints);
 			}
 			else
 			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[1].reserved_ints);
+				TSetArray[2].ChangeSize(TSetArray[1].reserved_ints);
 			}
 
-			BitFieldArray[2] = (BitFieldArray[0] | BitFieldArray[1]);
+			TSetArray[2] = (TSetArray[0] | TSetArray[1]);
 
-			OutputRow(BitFieldArray[2]);
+			OutputRow(TSetArray[2]);
 			break;
 
 		case 5:
 
-			if_field_isnt_initialized(field_initialized, 0, BitFieldArray[0]);
-			if_field_isnt_initialized(field_initialized, 1, BitFieldArray[1]);
+			if_field_isnt_initialized(set_initialized, 0, TSetArray[0]);
+			if_field_isnt_initialized(set_initialized, 1, TSetArray[1]);
 
-			if (BitFieldArray[0].reserved_ints > BitFieldArray[1].reserved_ints)
+			if (TSetArray[0].reserved_ints > TSetArray[1].reserved_ints)
 			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[0].reserved_ints);
+				TSetArray[2].ChangeSize(TSetArray[0].reserved_ints);
 			}
 			else
 			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[1].reserved_ints);
+				TSetArray[2].ChangeSize(TSetArray[1].reserved_ints);
 			}
 
-			BitFieldArray[2] = (BitFieldArray[0] & BitFieldArray[1]);
+			TSetArray[2] = (TSetArray[0] & TSetArray[1]);
 
-			OutputRow(BitFieldArray[2]);
+			OutputRow(TSetArray[2]);
 			break;
 
 		case 6:
@@ -193,9 +194,9 @@ int main()
 			std::cin.ignore();
 			std::cin >> which_bitfield;
 
-			if (field_initialized[which_bitfield])
+			if (set_initialized[which_bitfield])
 			{
-				OutputRow(BitFieldArray[which_bitfield]);
+				OutputRow(TSetArray[which_bitfield]);
 			}
 			else
 			{
@@ -216,7 +217,7 @@ int main()
 }
 
 
-
+/*
 void InputRow(BitField& obj)
 {
 	char* input;
@@ -270,4 +271,4 @@ void OutputRow(BitField& obj)
 	std::cout << "\n";
 
 	delete[] output;
-}
+}*/

@@ -1,9 +1,22 @@
 #include "TSet.h"
 
+TSet::TSet()
+{
+	indicator_vector.ChangeSize(0);
+	size = 0;
+
+	indicator_vector.TurnOff(0);
+}
+
 TSet::TSet(unsigned int n)
 {
 	indicator_vector.ChangeSize(n);
 	size = n;
+
+	for (int i = 0; i < size; i++)
+	{
+		indicator_vector.TurnOff(i);
+	}
 }
 
 TSet::TSet(TSet& obj2)

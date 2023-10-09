@@ -14,6 +14,7 @@ public:
 	explicit TSet(unsigned int n);
 	TSet(TSet& obj2);
 	TSet(BitField& obj2);
+	TSet();
 
 	operator BitField();
 
